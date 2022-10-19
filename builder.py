@@ -1,6 +1,8 @@
+from typing import Optional, Callable
+
 import functions
 
-CMD_TO_FUNCTION = {
+CMD_TO_FUNCTION: dict[str, Callable] = {
     'filter': functions.filter_query,
     'map': functions.map_query,
     'unique': functions.unique_query,
@@ -12,11 +14,11 @@ CMD_TO_FUNCTION = {
 FILE = 'data/apache_logs.txt'
 
 
-def build_query(cmd, param, data):
+def build_query(cmd: str, param: str, data: Optional[list[str]]) -> list[str]:
     if data is None:
         with open(FILE, 'r') as f:
-            data = list(map(lambda x: x.strip(), f))
+            prepared_data: list[str] = list(map(lambda x: x.strip(), f))
     else:
-        data = data
+        prepared_data = data
 
-    return CMD_TO_FUNCTION[cmd](param=param, data=data)
+    return CMD_TO_FUNCTION[cmd](param=param, data=prepared_data)
